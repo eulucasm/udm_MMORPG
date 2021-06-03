@@ -13,7 +13,33 @@ UsuariosDAO.prototype.inserirUsuario = function(usuario){
 	
 	});
 }
+/* logica que consulta se o usuario esta dentro do banco, e assim, renderiza a pagina
+de jogo, ou retorna a tela de login*/
+UsuariosDAO.prototype.autenticar = function(usuario, req, res){
+	this._connection.open(function(err, mongoclient){
+		mongoclient.collection("usuarios", function(err, collection){
+			collection.fidn(usuario).toArray(function(err, result){
 
-module.exports = function(){
+				if(result[0] != undefined){
+					req.session.autorizado = true;
+
+					req.session.usuario = result[0].usuario;
+					req.session.casa = result[0].casa;
+				}
+
+				if(req.session.autorizado){
+					res.redirect("jogo");
+				} else {
+					res.render("index", {validacao: {}});
+				}
+			});
+			mongoclient.close();
+		});
+	
+	});
+
+}
+
+module.exports = function(dadosForm){
 	return UsuariosDAO;
 }

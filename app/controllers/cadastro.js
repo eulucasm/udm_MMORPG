@@ -21,10 +21,14 @@ module.exports.cadastrar  = function(application, req, res){
 
 	var connection = application.config.dbConnection;
     var UsuariosDAO = new application.app.models.UsuariosDAO(connection);
+    var JogoDAO = new application.app.models.JogoDAO(connection);
+
 		//A variavel usuariosDAO que contem a instancia do nosso objeto
 	
 	UsuariosDAO.inserirUsuario(dadosForm);//recuperei função de conexão com o modulo que conexão com o banco
+	JogoDAO.gerarParametros(dadosForm.usuario);
 		//os () faz com que a funcão contida dentro da variavel seja executada.
+
 
 	res.send('Podemos cadastrar')
 }	
